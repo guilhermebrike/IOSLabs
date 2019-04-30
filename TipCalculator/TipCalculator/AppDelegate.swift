@@ -16,6 +16,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        
+        // added code
+        window?.rootViewController = CalculatorViewController()
+        
+        window?.makeKeyAndVisible()
+        
+        // end of added code
+        
+        
         return true
     }
 
