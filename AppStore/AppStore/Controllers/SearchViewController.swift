@@ -16,6 +16,8 @@ class SearchViewController: UICollectionViewController, UICollectionViewDelegate
         super.viewDidLoad()
         collectionView.backgroundColor = .white
         collectionView.register(SearchCollectionViewCell.self, forCellWithReuseIdentifier: cellid)
+        
+        fetchSearchResultApps()
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
@@ -38,6 +40,44 @@ class SearchViewController: UICollectionViewController, UICollectionViewDelegate
     }
     
     required init?(coder aDecoder: NSCoder) {
-        fatalError("Init blabla")
+        fatalError("Init (coder) has not been implemented")
     }
+    
+    fileprivate func fetchSearchResultApps() {
+        // Get Request
+        // 1. URL
+        let urlString = "https://itunes.apple.com/search?term=instagram&entity=software"
+        
+        guard let url = URL(string: urlString) else { return }
+        
+        //2. send a request
+        
+        
+        // the Data?, URLResponse?,Error? is a Closure, search about that later
+        URLSession.shared.dataTask(with: url) { (data, response, error) in
+            
+            if let err = error {
+                print("Failed to fetch apps: ", err)
+                return
+            }
+            
+            guard let data = data else { return }
+            
+            do {
+                // 3. parse response
+                let searchResult = try JSONDecoder().decode(SearchResultApps.self, from: data)
+                searchResult.results.forEach({ (result) in
+                    print(result.trackName, result.primaryGenreName)
+                })
+            }catch let jsonError {
+                print("Failed to decode JSON:", jsonError)
+            }
+            
+
+        }.resume() // sends the request
+        
+        
+
+    }
+    
 }
