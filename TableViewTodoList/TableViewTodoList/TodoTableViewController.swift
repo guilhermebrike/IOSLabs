@@ -14,16 +14,25 @@ class TodoTableViewController: UITableViewController {
     
     // MARK: - Properties
     
+    var data: Dictionary<String,[String]> = [
+        "Low Priority": [],
+        "Medium Priority": [],
+        "High Prioritay" : []
+    ]
+    
     private var todos: [String] = [String]()
     
     // MARK: - Constants
     
     private let cellId = "todoCell"
+    private let headerId = "headerCell"
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         tableView.register(TodoTableViewCell.self, forCellReuseIdentifier: cellId)
+        tableView.register(TodoTableViewHeader.self, forHeaderFooterViewReuseIdentifier: headerId)
+        
         // editButtonItem comes with isEditing: Bool
         navigationItem.leftBarButtonItem = editButtonItem
         
@@ -51,8 +60,9 @@ class TodoTableViewController: UITableViewController {
     // MARK: - tableview data source
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // how many rows? to display
-        return todos.count
+        // how many rows? to display in a section
+        let sectionCount = Array(data.keys)[section]
+        return data[sectionCount]!.count
     }
     
     // MARK: - code for each Cell in the table view
@@ -60,20 +70,30 @@ class TodoTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         // what do do for each cell
         let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as! TodoTableViewCell
-        cell.todoItem.text = "TODO \(indexPath.row)"
+        
+        let sectionString = Array(data.keys)[indexPath.section]
+        cell.todoItem.text = data[sectionString]![indexPath.row]
+        
         return cell
     }
     
+    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        let sectionString = Array(data.keys)[section]
+        return sectionString
+    }
     
+    override func numberOfSections(in tableView: UITableView) -> Int {
+        return data.count
+    }
     
 }
 
-// MARK: - Table vie
+// MARK: - Table view
 
 extension TodoTableViewController {
     
     override func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
-        // 1. editButton
+        // not working
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -84,12 +104,21 @@ extension TodoTableViewController {
         switch editingStyle {
         case .insert:
             break
-        case .delete:
+        case .delete: // delete an Item
+            let key = Array(data.keys)[indexPath.section] // key that represents the section
+            let array = data[key]! // array of values in the key
+            //let value = array[indexPath.row] // the value i wish to delete
+            data[key]?.remove(at: indexPath.row)
+            
+            tableView.reloadData()
             break
         default: break
         }
     }
     
+    //let key = Array(yourDictionary.keys)[indexPath.section]
+    //let array = yourDictionary[key]
+    //let value = array[indexPath.row]
 }
 
 extension TodoTableViewController: AddTodoViewControllerDelegate {
@@ -99,7 +128,8 @@ extension TodoTableViewController: AddTodoViewControllerDelegate {
     }
     
     func addTodoDidFinish(itemTodo: String) {
-        todos.append(itemTodo)
+        //todos.append(itemTodo)
+        data["Low Priority"]?.append(itemTodo)
         tableView.reloadData() // refresh!
     }
 }
