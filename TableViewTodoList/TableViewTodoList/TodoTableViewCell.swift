@@ -23,7 +23,7 @@ class TodoTableViewCell: UITableViewCell {
     
     override func setSelected(_ selected: Bool, animated: Bool) {
         //passing false, we do not highligh a cell
-        super.setSelected(false, animated: animated)
+        super.setSelected(selected, animated: animated)
         
     }
     
