@@ -32,6 +32,8 @@ class DetailsTodoViewController: UIViewController {
         if todoItem.stripped == true {
             labelsStackView.addArrangedSubview(DetailsTodoViewController.createUILabel(fontSize: 25,value: "(DONE) "+todoItem.activity))
             
+        } else {
+            labelsStackView.addArrangedSubview(DetailsTodoViewController.createUILabel(fontSize: 25,value: todoItem.activity))
         }
         //ask question as I had a lot of problems on acessing the city, also open the code for Assignment 1 Started to ask
         labelsStackView.addArrangedSubview(DetailsTodoViewController.createUILabel(fontSize: 25,value: todoItem.deadline))
