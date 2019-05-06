@@ -84,7 +84,7 @@ class SearchCollectionViewCell: UICollectionViewCell {
             ])
         
         wholeStackView.axis = .vertical
-        wholeStackView.spacing = 16
+        wholeStackView.spacing = 15
         
         
         addSubview(wholeStackView)
