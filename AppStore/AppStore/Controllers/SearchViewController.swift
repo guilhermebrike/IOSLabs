@@ -2,82 +2,73 @@
 //  SearchViewController.swift
 //  AppStore
 //
-//  Created by Guilherme Wahlbrink on 2019-04-25.
-//  Copyright © 2019 Guilherme Wahlbrink. All rights reserved.
+//  Created by Thong Hoang Nguyen on 2019-04-25.
+//  Copyright © 2019 Thong Hoang Nguyen. All rights reserved.
 //
 
 import UIKit
+import SDWebImage
 
-class SearchViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
+class SearchViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout, UISearchBarDelegate {
+  
+  private let cellID = "resultCell"
+  private var searchResults = [ResultApp]()
+  fileprivate let searchController = UISearchController(searchResultsController: nil)
+  
+  override func viewDidLoad() {
+    super.viewDidLoad()
+    collectionView.register(SearchCollectionViewCell.self, forCellWithReuseIdentifier: cellID)
+    collectionView.backgroundColor = .white
+    setupSearchBar()
+  }
+  
+  fileprivate func setupSearchBar() {
+    definesPresentationContext = true
+    navigationItem.searchController = self.searchController
+    navigationItem.hidesSearchBarWhenScrolling = false
+    searchController.searchBar.delegate = self
+  }
+  
+  var timer: Timer?
+  
+  func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+    // everytime user inputs something -> this delegate method gets called.
+    // search throttling
+    timer?.invalidate()
+    timer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false, block: { (_) in
+      NetworkService.shared.fetchSearchResultApps(searchTerm: searchText) { (results, err) in
+        self.searchResults = results
+        DispatchQueue.main.async {
+          self.collectionView.reloadData()
+        }
+      }
+    })
+  }
+  
+  // MARK: - UICollectionViewDelegateFlowLayout
+  func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+    return CGSize(width: view.frame.width, height: 340 )
+  }
+  
+  // MARK: - Data Source
+  
+  override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    return self.searchResults.count
+  }
+  
+  override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+    let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellID, for: indexPath) as! SearchCollectionViewCell
     
-    fileprivate let cellid = "resultCell"
+    cell.resultApp = searchResults[indexPath.item]
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        collectionView.backgroundColor = .white
-        collectionView.register(SearchCollectionViewCell.self, forCellWithReuseIdentifier: cellid)
-        
-        fetchSearchResultApps()
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        
-        return CGSize(width: view.frame.width, height: 350)
-    }
-    
-    // TODO DataSource
-    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 100
-    }
-    
-    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell =  collectionView.dequeueReusableCell(withReuseIdentifier: cellid, for: indexPath) as! SearchCollectionViewCell
-        return cell
-    }
-    
-    init() {
-        super.init(collectionViewLayout: UICollectionViewFlowLayout())
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("Init (coder) has not been implemented")
-    }
-    
-    fileprivate func fetchSearchResultApps() {
-        // Get Request
-        // 1. URL
-        let urlString = "https://itunes.apple.com/search?term=instagram&entity=software"
-        
-        guard let url = URL(string: urlString) else { return }
-        
-        //2. send a request
-        
-        
-        // the Data?, URLResponse?,Error? is a Closure, search about that later
-        URLSession.shared.dataTask(with: url) { (data, response, error) in
-            
-            if let err = error {
-                print("Failed to fetch apps: ", err)
-                return
-            }
-            
-            guard let data = data else { return }
-            
-            do {
-                // 3. parse response
-                let searchResult = try JSONDecoder().decode(SearchResultApps.self, from: data)
-                searchResult.results.forEach({ (result) in
-                    print(result.trackName, result.primaryGenreName)
-                })
-            }catch let jsonError {
-                print("Failed to decode JSON:", jsonError)
-            }
-            
-
-        }.resume() // sends the request
-        
-        
-
-    }
-    
+    return cell
+  }
+  
+  init() {
+    super.init(collectionViewLayout: UICollectionViewFlowLayout())
+  }
+  
+  required init?(coder aDecoder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+  }
 }

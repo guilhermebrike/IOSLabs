@@ -2,8 +2,8 @@
 //  AppDelegate.swift
 //  AppStore
 //
-//  Created by Guilherme Wahlbrink on 2019-04-25.
-//  Copyright © 2019 Guilherme Wahlbrink. All rights reserved.
+//  Created by Thong Hoang Nguyen on 2019-04-25.
+//  Copyright © 2019 Thong Hoang Nguyen. All rights reserved.
 //
 
 import UIKit
@@ -15,15 +15,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
-        
-        // added code
         window?.rootViewController = MainTabBarController()
-        
         window?.makeKeyAndVisible()
-        
-        // end of added code
-        
         
         return true
     }
