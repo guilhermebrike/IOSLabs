@@ -2,8 +2,8 @@
 //  SearchResultApp.swift
 //  AppStore
 //
-//  Created by Thong Hoang Nguyen on 2019-04-29.
-//  Copyright © 2019 Thong Hoang Nguyen. All rights reserved.
+//  Created by Derrick Park on 2019-04-29.
+//  Copyright © 2019 Derrick Park. All rights reserved.
 //
 
 import Foundation
@@ -16,7 +16,8 @@ struct SearchResultApp: Decodable {
 struct ResultApp: Decodable {
   let trackName: String
   let primaryGenreName: String
-  let averageUserRating: Float?
-  let artworkUrl100: String // app icon
+  let averageUserRating: Float? // some result does not have rating field
   let screenshotUrls: [String]
+  let artworkUrl100: String // icon
+  
 }

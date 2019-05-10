@@ -2,29 +2,27 @@
 //  SearchCollectionViewCell.swift
 //  AppStore
 //
-//  Created by Thong Hoang Nguyen on 2019-04-29.
-//  Copyright © 2019 Thong Hoang Nguyen. All rights reserved.
+//  Created by Derrick Park on 2019-04-29.
+//  Copyright © 2019 Derrick Park. All rights reserved.
 //
 
 import UIKit
-import SDWebImage
 
-class SearchCollectionViewCell: UICollectionViewCell {
+class SearchFinalCollectionViewCell: UICollectionViewCell {
+  
+  // MARK: - Properties
   
   var resultApp: ResultApp! {
     didSet {
       nameLabel.text = resultApp.trackName
       categoryLabel.text = resultApp.primaryGenreName
-      ratingsLabel.text = "\(resultApp.averageUserRating ?? 0)"
-      let iconUrl = URL(string: resultApp.artworkUrl100)
-      iconImageView.sd_setImage(with: iconUrl)
+      ratingsLabel.text = "Ratings: \(resultApp.averageUserRating ?? 0)"
       
+      iconImageView.sd_setImage(with: URL(string: resultApp.artworkUrl100))
       screenshot1ImageView.sd_setImage(with: URL(string: resultApp.screenshotUrls[0]))
-      
       if resultApp.screenshotUrls.count > 1 {
         screenshot2ImageView.sd_setImage(with: URL(string: resultApp.screenshotUrls[1]))
       }
-      
       if resultApp.screenshotUrls.count > 2 {
         screenshot3ImageView.sd_setImage(with: URL(string: resultApp.screenshotUrls[2]))
       }
@@ -33,10 +31,9 @@ class SearchCollectionViewCell: UICollectionViewCell {
   
   let iconImageView: UIImageView = {
     let iv = UIImageView()
-    iv.backgroundColor = .blue
     iv.widthAnchor.constraint(equalToConstant: 64).isActive = true
     iv.heightAnchor.constraint(equalToConstant: 64).isActive = true
-    iv.layer.cornerRadius = 12
+    iv.layer.cornerRadius = 16
     iv.clipsToBounds = true
     return iv
   }()
@@ -49,20 +46,20 @@ class SearchCollectionViewCell: UICollectionViewCell {
   
   let categoryLabel: UILabel = {
     let lb = UILabel()
-    lb.text = "photo & video"
+    lb.text = "Photos & Videos"
     return lb
   }()
   
   let ratingsLabel: UILabel = {
     let lb = UILabel()
-    lb.text = "991k"
+    lb.text = "991K"
     return lb
   }()
   
   let getButton: UIButton = {
     let butt = UIButton(type: .system)
     butt.setTitle("GET", for: .normal)
-    butt.setTitleColor(.blue, for: .normal)
+    butt.setTitleColor(.systemBlue, for: .normal)
     butt.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
     butt.backgroundColor = UIColor(white: 0.95, alpha: 1)
     butt.widthAnchor.constraint(equalToConstant: 80).isActive = true
@@ -71,44 +68,56 @@ class SearchCollectionViewCell: UICollectionViewCell {
     return butt
   }()
   
-  lazy var screenshot1ImageView = createScreenShotImageView()
-  lazy var screenshot2ImageView = createScreenShotImageView()
-  lazy var screenshot3ImageView = createScreenShotImageView()
+  lazy var screenshot1ImageView: UIImageView = createScreenShotImageView()
+  lazy var screenshot2ImageView: UIImageView = createScreenShotImageView()
+  lazy var screenshot3ImageView: UIImageView = createScreenShotImageView()
+  
+  // MARK: - Helper methods
   
   fileprivate func createScreenShotImageView() -> UIImageView {
     let iv = UIImageView()
-    iv.backgroundColor = .green
-    iv.layer.cornerRadius = 7
+    iv.layer.cornerRadius = 8
     iv.clipsToBounds = true
     iv.layer.borderWidth = 0.5
     iv.layer.borderColor = UIColor(white: 0.5, alpha: 0.5).cgColor
     iv.contentMode = .scaleAspectFill
     return iv
   }
+  
+  // MARK - Initializer
+  
   override init(frame: CGRect) {
     super.init(frame: frame)
-    let labelStackView = UIStackView(arrangedSubviews: [nameLabel, categoryLabel, ratingsLabel])
-    labelStackView.axis = .vertical
     
-    let appInfoStackView = UIStackView(arrangedSubviews: [iconImageView, labelStackView, getButton])
+    let labelsStackView = UIStackView(arrangedSubviews: [
+      nameLabel, categoryLabel, ratingsLabel
+      ])
+    labelsStackView.axis = .vertical
+    
+    let appInfoStackView = UIStackView(arrangedSubviews: [
+      iconImageView, labelsStackView, getButton
+      ])
     appInfoStackView.spacing = 12
     appInfoStackView.alignment = .center
     
-    let screenshotStackView = UIStackView(arrangedSubviews: [screenshot1ImageView, screenshot2ImageView, screenshot3ImageView])
-    screenshotStackView.spacing = 12
-    screenshotStackView.distribution = .fillEqually
+    let screenshotsStackView = UIStackView(arrangedSubviews: [
+      screenshot1ImageView, screenshot2ImageView, screenshot3ImageView
+      ])
+    screenshotsStackView.spacing = 12
+    screenshotsStackView.distribution = .fillEqually
     
-    let wholeStackView = UIStackView(arrangedSubviews: [appInfoStackView, screenshotStackView])
+    let wholeStackView = UIStackView(arrangedSubviews: [
+      appInfoStackView, screenshotsStackView
+      ])
     wholeStackView.axis = .vertical
+    wholeStackView.spacing = 16
     
     addSubview(wholeStackView)
-    wholeStackView.spacing = 16
-    wholeStackView.matchParent(padding: UIEdgeInsets.init(top: 16, left: 16, bottom: 16, right: 16))
+    wholeStackView.matchParent(padding: .init(top: 16, left: 16, bottom: 16, right: 16))
   }
   
   required init?(coder aDecoder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
 }
-
 
