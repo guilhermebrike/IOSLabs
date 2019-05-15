@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CoreData
 
 class CompaniesTableViewController: UITableViewController, AddCompanyControllerDelegate {
     
@@ -16,7 +17,7 @@ class CompaniesTableViewController: UITableViewController, AddCompanyControllerD
     
     // MARK: - properties
     
-    var companies = ["Apple", "Google", "Facebook", "Amazon", "Microsoft"]
+    var companies = [Company]()
     
     
     // MARK: - Life cycle methods
@@ -28,6 +29,7 @@ class CompaniesTableViewController: UITableViewController, AddCompanyControllerD
         tableView.separatorColor = .spaceGray
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: reuseIdentifier)
         setupRightAddButton()
+        fetchCompanies()
     }
     
     // MARK: - helper methods
@@ -47,9 +49,37 @@ class CompaniesTableViewController: UITableViewController, AddCompanyControllerD
         present(addNVC, animated: true, completion: nil)
     }
     
+    private func fetchCompanies() {
+        
+        // NSPersistentContainer: database
+        let persistentContainer = NSPersistentContainer(name: "CompanyTracker")
+        persistentContainer.loadPersistentStores { (storeDescription, error) in
+            if let err = error {
+                fatalError("Loading of persistant store failed: \(err)")
+            }
+        }
+        // NSManagedObjectContext: scratch pad
+        // - viewContext:  ManagedObjectContext(main thread)
+        let managedContext = persistentContainer.viewContext
+        
+        let fetchRequest = NSFetchRequest<Company>(entityName: "Company")
+        
+        
+        do {
+            let companies = try managedContext.fetch(fetchRequest)
+            companies.forEach { (company) in
+                print(company.name ?? "")
+            }
+        } catch let err {
+            print("Failed to fetch companies: \(err)")
+        }
+        
+    }
+    
+    
     // MARK: - Add Company controller delegate
     
-    func addCompanyDidFinish(company: String){
+    func addCompanyDidFinish(company: Company){
         companies.append(company)
         let insertPath = IndexPath(row: companies.count - 1, section: 0)
         tableView.insertRows(at: [insertPath], with: .automatic)
@@ -72,8 +102,7 @@ class CompaniesTableViewController: UITableViewController, AddCompanyControllerD
         cell.backgroundColor = .black
         cell.textLabel?.textColor = .white
         cell.textLabel?.font = UIFont.boldSystemFont(ofSize: 20)
-        cell.textLabel?.text = companies[indexPath.row]
-        
+        cell.textLabel?.text = companies[indexPath.row].name
         return cell
     }
     

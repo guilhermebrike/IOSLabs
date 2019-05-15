@@ -7,10 +7,11 @@
 //
 
 import UIKit
+import CoreData
 
 // protocol for passing data back to companyTableViewController
 protocol AddCompanyControllerDelegate: class {
-    func addCompanyDidFinish(company: String)
+    func addCompanyDidFinish(company: Company)
     func addCompanyDidCancel()
 }
 
@@ -74,8 +75,33 @@ class AddCompanyViewController: UIViewController {
     
     @objc func savePressed() {
         
-        guard let companyName = delegate?.addCompanyDidFinish(company: nameTextField.text ?? "") else { return }
-        dismiss(animated: true, completion: nil)
+        // NSPersistentContainer: database
+        let persistentContainer = NSPersistentContainer(name: "CompanyTracker")
+        persistentContainer.loadPersistentStores { (storeDescription, error) in
+            if let err = error {
+                fatalError("Loading of persistant store failed: \(err)")
+            }
+        }
+        
+        // NSManagedObjectContext: scratch pad
+        // - viewContext:  ManagedObjectContext(main thread)
+        let managedContext = persistentContainer.viewContext
+        
+        let newCompany = NSEntityDescription.insertNewObject(forEntityName: "Company", into: managedContext)
+        
+        newCompany.setValue(nameTextField.text ?? "", forKey: "name")
+        
+        do {
+            try managedContext.save()
+        } catch let err {
+            print("Failed to save new company: \(err)")
+        }
+        
+        //delegate?.addCompanyDidFinish(company: nameTextField.text ?? "")
+        dismiss(animated: true) {
+            let company = Company(context: managedContext)
+            company.name = self.nameTextField.text ?? ""
+            self.delegate?.addCompanyDidFinish(company: company)
+        }
     }
-    
 }
