@@ -15,6 +15,14 @@ class LightStatusBarNavigationController: UINavigationController {
     }
 }
 
+// *access controls
+// open, public, internal, fileprivate, private
+extension UINavigationController {
+   open override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
+}
+
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
     
@@ -24,6 +32,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
         // navigation bar appearance proxy
+        UINavigationBar.appearance().tintColor = .white
         UINavigationBar.appearance().barTintColor = .black
         UINavigationBar.appearance().prefersLargeTitles = true
         UINavigationBar.appearance().isTranslucent = false

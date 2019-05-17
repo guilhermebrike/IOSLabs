@@ -16,6 +16,8 @@
 		79647E77228B6DDC00A11A64 /* AddCompanyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79647E76228B6DDC00A11A64 /* AddCompanyViewController.swift */; };
 		79647E79228B7B9600A11A64 /* UIView+ConstraintLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79647E78228B7B9600A11A64 /* UIView+ConstraintLayout.swift */; };
 		79647E7D228B84D100A11A64 /* CompanyTracker.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 79647E7B228B84D100A11A64 /* CompanyTracker.xcdatamodeld */; };
+		79647E7F228CACC000A11A64 /* CoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79647E7E228CACC000A11A64 /* CoreDataManager.swift */; };
+		79647EAD228E18C500A11A64 /* CompanyTableViewCellTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79647EAC228E18C500A11A64 /* CompanyTableViewCellTableViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,6 +32,8 @@
 		79647E76228B6DDC00A11A64 /* AddCompanyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddCompanyViewController.swift; sourceTree = "<group>"; };
 		79647E78228B7B9600A11A64 /* UIView+ConstraintLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+ConstraintLayout.swift"; sourceTree = "<group>"; };
 		79647E7C228B84D100A11A64 /* CompanyTracker.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = CompanyTracker.xcdatamodel; sourceTree = "<group>"; };
+		79647E7E228CACC000A11A64 /* CoreDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataManager.swift; sourceTree = "<group>"; };
+		79647EAC228E18C500A11A64 /* CompanyTableViewCellTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompanyTableViewCellTableViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -68,6 +72,8 @@
 				79647E72228B607000A11A64 /* CompaniesTableViewController.swift */,
 				79647E76228B6DDC00A11A64 /* AddCompanyViewController.swift */,
 				79647E7B228B84D100A11A64 /* CompanyTracker.xcdatamodeld */,
+				79647E7E228CACC000A11A64 /* CoreDataManager.swift */,
+				79647EAC228E18C500A11A64 /* CompanyTableViewCellTableViewCell.swift */,
 			);
 			path = CoreDataExample;
 			sourceTree = "<group>";
@@ -168,7 +174,9 @@
 				79647E73228B607000A11A64 /* CompaniesTableViewController.swift in Sources */,
 				79647E75228B610700A11A64 /* UIColor+Scheme.swift in Sources */,
 				79647E7D228B84D100A11A64 /* CompanyTracker.xcdatamodeld in Sources */,
+				79647E7F228CACC000A11A64 /* CoreDataManager.swift in Sources */,
 				79647E79228B7B9600A11A64 /* UIView+ConstraintLayout.swift in Sources */,
+				79647EAD228E18C500A11A64 /* CompanyTableViewCellTableViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
