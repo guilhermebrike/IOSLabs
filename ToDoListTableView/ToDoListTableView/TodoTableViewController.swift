@@ -14,7 +14,7 @@ class TodoTableViewController: UITableViewController {
     
     // MARK: - Properties
     
-    var data: Dictionary<String,[TodoItem]> = [
+    var data: Dictionary<String,[OldTodoItem]> = [
         "Low Priority": [],
         "Medium Priority": [],
         "High Priority" : []
@@ -189,8 +189,21 @@ extension TodoTableViewController: AddTodoViewControllerDelegate {
     }
     
     func addTodoDidFinish(itemTitle: String, deadline: String, priority: String) {
-        //todos.append(itemTodo)
-        data[priority]?.append(TodoItem(activity: itemTitle, deadline: deadline, priority: priority))
+        
+        var keyPriority: String = String()
+        switch priority {
+        case "1":
+            keyPriority = "High Priority"
+        case "2":
+            keyPriority = "Medium Priority"
+        case "3":
+            keyPriority = "Low Priority"
+        default:
+            keyPriority = ""
+        }
+        
+        
+        data[keyPriority]?.append(OldTodoItem(activity: itemTitle, deadline: deadline, priority: priority))
         tableView.reloadData() // refresh!
     } 
 }

@@ -9,7 +9,7 @@
 import Foundation
 
 
-class TodoItem {
+class OldTodoItem {
     var activity: String
     var deadline: String
     var priority: String

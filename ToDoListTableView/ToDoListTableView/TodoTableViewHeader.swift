@@ -17,7 +17,6 @@ class TodoTableViewHeader: UITableViewHeaderFooterView {
         todoHeaderLow.translatesAutoresizingMaskIntoConstraints = false
         todoHeaderLow.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
         todoHeaderLow.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
-
     }
     
     required init?(coder aDecoder: NSCoder) {

@@ -10,7 +10,7 @@ import UIKit
 
 class DetailsTodoViewController: UIViewController {
 
-    var todoItem: TodoItem!
+    var todoItem: OldTodoItem!
     
     
     lazy var labelsStackView: UIStackView = {

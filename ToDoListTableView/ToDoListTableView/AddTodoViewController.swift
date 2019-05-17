@@ -71,13 +71,19 @@ class AddTodoViewController: UIViewController {
         self.hideKeyboardWhenTappedAround()
     }
     
-    @objc fileprivate func didAddTodo() {
+    @objc fileprivate func didAddTodo() { // clicked done
+        
         // delegate! -> callback
+        
+        // database manager
+        
+        let managedContext = CoreDataManager.shared.persistentContainer.viewContext
+        
         
         guard let todoText = todoTextField.text else { return }
         guard let deadlineText = deadLineTextField.text else { return }
         guard let priorityText = priorityTextField.text else { return }
-        
+        print("YEAH")
         delegate?.addTodoDidFinish(itemTitle: todoText, deadline: deadlineText, priority: priorityText)
         navigationController?.popViewController(animated: true)
     }
