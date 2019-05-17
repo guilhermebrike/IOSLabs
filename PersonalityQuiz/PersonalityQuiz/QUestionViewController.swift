@@ -28,8 +28,6 @@ class QUestionViewController: UIViewController {
 
     @IBOutlet weak var questionProgressView: UIProgressView!
     
-    
-    
     var questionIndex = 0
     
     var answersChosen: [Answer] = []
@@ -41,8 +39,7 @@ class QUestionViewController: UIViewController {
                     Answer(text: "Steak", type: .dog),
                     Answer(text: "Fish", type: .cat),
                     Answer(text: "Carrots", type: .rabbit),
-                    Answer(text: "Corn", type: .turtle)
-            ]),
+                    Answer(text: "Corn", type: .turtle)]),
          Question(text: "Which activities do you enjoy?",
         type: .multiple,
         answers: [
@@ -64,8 +61,6 @@ class QUestionViewController: UIViewController {
     ]
     
     
-
-
     override func viewDidLoad() {
         super.viewDidLoad()
         updateUI()
@@ -95,9 +90,11 @@ class QUestionViewController: UIViewController {
     @IBOutlet weak var multiSwitch4: UISwitch!
     
     
+    
+    
     @IBAction func multipleAnswerButtonPressed() {
         let currentAnswers = questions[questionIndex].answers
-          
+        
         if multiSwitch1.isOn {
             answersChosen.append(currentAnswers[0])
         }
@@ -110,39 +107,23 @@ class QUestionViewController: UIViewController {
         if multiSwitch4.isOn {
             answersChosen.append(currentAnswers[3])
         }
-          
+        
         nextQuestion()
     }
     
     @IBOutlet var rangedSlider: UISlider!
     
-    
     @IBAction func rangedAnswerButtonPressed() {
+        rangedSlider.value = 0.50
+        print("rangedSLIIIDER")
         let currentAnswers = questions[questionIndex].answers
         let index = Int(round(rangedSlider.value *
             Float(currentAnswers.count - 1)))
-        answersChosen.append(currentAnswers[index])
+        answersChosen.append(currentAnswers[1])
         nextQuestion()
     }
     
-    
-    func updateMultipleStack(using answers: [Answer]) {
-        multipleStackView.isHidden = false
-        multiSwitch1.isOn = false
-        multiSwitch2.isOn = false
-        multiSwitch3.isOn = false
-        multiSwitch4.isOn = false
-        multiLabel1.text = answers[0].text
-        multiLabel2.text = answers[1].text
-        multiLabel3.text = answers[2].text
-        multiLabel4.text = answers[3].text
-    }
-    func updateRangedStack(using answers: [Answer]) {
-        rangedStackView.isHidden = false
-        rangedSlider.setValue(0.5, animated: false)
-        rangedLabel1.text = answers.first?.text
-        rangedLabel2.text = answers.last?.text
-    }
+
     
     func updateUI() {
         singleStackView.isHidden = true
@@ -166,56 +147,53 @@ class QUestionViewController: UIViewController {
         }
     }
 
-
     func updateSingleStack(using answers: [Answer]) {
         singleStackView.isHidden = false
+print("Single")
         singleButton1.setTitle(answers[0].text, for: .normal)
         singleButton2.setTitle(answers[1].text, for: .normal)
         singleButton3.setTitle(answers[2].text, for: .normal)
         singleButton4.setTitle(answers[3].text, for: .normal)
     }
     
-    
-    var responses: [Answer]!
-    
-    
-    override func prepare(for segue: UIStoryboardSegue, sender:
-        Any?) {
-        if segue.identifier == "ResultsSegue" {
-              
-        }
+    func updateRangedStack(using answers: [Answer]) {
+        print("Ranged")
+        rangedStackView.isHidden = false
+        rangedSlider.setValue(0.5, animated: false)
+        rangedLabel1.text = answers.first?.text
+        rangedLabel2.text = answers.last?.text
     }
-    
-    
-    override func prepare(for segue: UIStoryboardSegue, sender:
-        Any?) {
-        if segue.identifier == "ResultsSegue" {
-            let resultsViewController = segue.destination as!
-            ResultsViewController
-            resultsViewController.responses = answersChosen
-        }
-    }
-    
-    
-    func calculatePersonalityResult() {
-        var frequencyOfAnswers: [AnimalType: Int] = [:]
-    }
-    
-    let responseTypes = responses.map { $0.type }
-    
     
     func updateMultipleStack(using answers: [Answer]) {
+        print("Multiple")
         multipleStackView.isHidden = false
+        multiSwitch1.isOn = false
+        multiSwitch2.isOn = false
+        multiSwitch3.isOn = false
+        multiSwitch4.isOn = false
         multiLabel1.text = answers[0].text
         multiLabel2.text = answers[1].text
         multiLabel3.text = answers[2].text
         multiLabel4.text = answers[3].text
     }
     
-    func updateRangedStack(using answers: [Answer]) {
-        rangedStackView.isHidden = false
-        rangedLabel1.text = answers.first?.text
-        rangedLabel2.text = answers.last?.text
+    
+    func nextQuestion() {
+        questionIndex += 1
+        if questionIndex < questions.count {
+            updateUI()
+        } else {
+            performSegue(withIdentifier: "ResultsSegue", sender: nil)
+        }
     }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "ResultsSegue" {
+            let resultsViewController = segue.destination as! ResultsViewController
+            resultsViewController.responses = answersChosen
+        }
+    }
+    
+
 
 }
