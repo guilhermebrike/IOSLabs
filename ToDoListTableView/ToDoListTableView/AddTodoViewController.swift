@@ -7,10 +7,11 @@
 //
 
 import UIKit
-
+import CoreData
 protocol AddTodoViewControllerDelegate: class {
     func addTodoDidCancel()
-    func addTodoDidFinish(itemTitle: String,deadline: String,priority: String)
+    func addTodoDidFinish(todoItem: TodoItem)
+    func editTodoDidFinish(todoItem: TodoItem)
 }
 
 
@@ -20,6 +21,15 @@ class AddTodoViewController: UIViewController {
     weak var delegate: AddTodoViewControllerDelegate?
     
     // label
+    
+    var todoItem: TodoItem? {
+        didSet {
+            todoTextField.text = todoItem?.title
+            todoDescTextField.text = todoItem?.todoDescription
+            deadLineTextField.text = todoItem?.deadline
+            priorityTextField.text = todoItem?.priorityNumber
+        }
+    }
     
     let descLabel: UILabel = UILabel(title: "What do you have to do?", color: .black, fontSize: 20, bold: true)
     //    let descLabel: UILabel = {
@@ -36,6 +46,13 @@ class AddTodoViewController: UIViewController {
         let tf = UITextField(frame: .zero)
         tf.translatesAutoresizingMaskIntoConstraints = false
         tf.placeholder = "Enter here..."
+        return tf
+    }()
+    
+    let todoDescTextField: UITextField = {
+        let tf = UITextField(frame: .zero)
+        tf.translatesAutoresizingMaskIntoConstraints = false
+        tf.placeholder = "Enter Desc here..."
         return tf
     }()
     
@@ -79,18 +96,38 @@ class AddTodoViewController: UIViewController {
         
         let managedContext = CoreDataManager.shared.persistentContainer.viewContext
         
+        if todoItem == nil { // insert
         
-        guard let todoText = todoTextField.text else { return }
-        guard let deadlineText = deadLineTextField.text else { return }
-        guard let priorityText = priorityTextField.text else { return }
-        print("YEAH")
-        delegate?.addTodoDidFinish(itemTitle: todoText, deadline: deadlineText, priority: priorityText)
-        navigationController?.popViewController(animated: true)
+            guard let todoText = todoTextField.text else { return }
+            guard let descriptionText = todoDescTextField.text else { return }
+            guard let deadlineText = deadLineTextField.text else { return }
+            guard let priorityText = priorityTextField.text else { return }
+            
+            let newTodoItem = NSEntityDescription.insertNewObject(forEntityName: "TodoItem", into: managedContext)
+            newTodoItem.setValue(todoText, forKey: "title")
+            newTodoItem.setValue(descriptionText, forKey: "title")
+            newTodoItem.setValue(deadlineText, forKey: "deadline")
+            newTodoItem.setValue(priorityText, forKey: "priorityNumber")
+            newTodoItem.setValue(false, forKey: "isCompleted")
+            CoreDataManager.shared.saveContext()
+            delegate?.addTodoDidFinish(todoItem: newTodoItem as! TodoItem)
+            navigationController?.popViewController(animated: true)
+
+        }else {
+            
+            todoItem?.title = todoTextField.text
+            todoItem?.todoDescription = todoDescTextField.text
+            todoItem?.deadline = deadLineTextField.text
+            todoItem?.priorityNumber = priorityTextField.text
+            CoreDataManager.shared.saveContext()
+            self.delegate?.editTodoDidFinish(todoItem: self.todoItem!)
+            navigationController?.popViewController(animated: true)
+        }
     }
     
     fileprivate func setupUI() {
         
-        let stackView = UIStackView(arrangedSubviews: [descLabel,todoTextField,deadLineTextField,priorityTextField])
+        let stackView = UIStackView(arrangedSubviews: [descLabel,todoTextField,todoDescTextField,deadLineTextField,priorityTextField])
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .vertical
         stackView.spacing = 30
@@ -118,7 +155,7 @@ class AddTodoViewController: UIViewController {
 extension UIViewController {
     
     func hideKeyboardWhenTappedAround() {
-        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action:    #selector(UIViewController.dismissKeyboard))
+        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(UIViewController.dismissKeyboard))
         tap.cancelsTouchesInView = false
         view.addGestureRecognizer(tap)
     }

@@ -14,7 +14,7 @@ struct CoreDataManager {
     private init() {}
     
     let persistentContainer: NSPersistentContainer = {
-        let container = NSPersistentContainer(name: "CompanyTracker")
+        let container = NSPersistentContainer(name: "DataModel")
         container.loadPersistentStores { (storeDescription, error) in
             if let err = error {
                 fatalError("Loading of persistent store failed: \(err)")

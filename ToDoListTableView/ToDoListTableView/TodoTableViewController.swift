@@ -7,14 +7,14 @@
 //
 
 import UIKit
-
+import CoreData
 // delegate, and datasource automatically conformed if its a subclass of UITABLEVIEWCONTROLLER
 // we have the -tableview (var)
 class TodoTableViewController: UITableViewController {
     
     // MARK: - Properties
     
-    var data: Dictionary<String,[OldTodoItem]> = [
+    var data: Dictionary<String,[TodoItem]> = [
         "Low Priority": [],
         "Medium Priority": [],
         "High Priority" : []
@@ -39,7 +39,7 @@ class TodoTableViewController: UITableViewController {
         
         // editButtonItem comes with isEditing: Bool
         navigationItem.leftBarButtonItem = editButtonItem
-        
+        editButtonItem.title = "Select"
         //adding a button to the navigation controller through navigationItem in the right side
         trashButton.isEnabled = false
         navigationItem.rightBarButtonItems = [UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addTodo)),trashButton]
@@ -47,6 +47,68 @@ class TodoTableViewController: UITableViewController {
         //navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addTodo))
         
         tableView.allowsMultipleSelectionDuringEditing = true
+        
+        fetchTodoItems()
+    }
+    
+    
+    private func fetchTodoItems() {
+        
+        // NSManagedObjectContext: scratch pad
+        // - viewContext:  ManagedObjectContext(main thread)
+        let managedContext = CoreDataManager.shared.persistentContainer.viewContext
+        let fetchRequest = NSFetchRequest<TodoItem>(entityName: "TodoItem")
+        
+        do {
+            let items = try managedContext.fetch(fetchRequest)
+            items.forEach { (item) in
+                var keyPriority: String = String()
+                switch item.priorityNumber! {
+                case "1":
+                    keyPriority = "High Priority"
+                case "2":
+                    keyPriority = "Medium Priority"
+                case "3":
+                    keyPriority = "Low Priority"
+                default:
+                    keyPriority = ""
+                }
+                data[keyPriority]?.append(item)
+            }
+        } catch let err {
+            print("Failed to fetch items: \(err)")
+        }
+        
+    }
+    
+    
+    override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+        
+        // delete action
+        let deleteAction = UITableViewRowAction(style: .destructive, title: "Delete") { (action, indexPath) in
+            
+            //1. remove from the tableview
+            
+            let key = Array(self.data.keys)[indexPath.section]
+            let todoItem = self.data[key]?.remove(at: indexPath.row) // first remove from the model
+            self.tableView.deleteRows(at: [indexPath], with: .automatic)
+            //2. remove from the database
+            CoreDataManager.shared.persistentContainer.viewContext.delete(todoItem!)
+            CoreDataManager.shared.saveContext()
+        }
+        // edit action
+        
+        let editAction = UITableViewRowAction(style: .normal, title: "Edit") { (action, indexPath) in
+            // 1. navigate(modal) to AddCompnayViewController
+            let editVC = AddTodoViewController()
+            editVC.delegate = self
+            let key = Array(self.data.keys)[indexPath.section]
+            let todoItem = self.data[key]?[indexPath.row]
+            editVC.todoItem = todoItem
+            self.navigationController?.pushViewController(editVC, animated: true)
+            // modal transition
+        }
+        return [deleteAction,editAction]
     }
     
     override func setEditing(_ editing: Bool, animated: Bool) {
@@ -66,12 +128,9 @@ class TodoTableViewController: UITableViewController {
                 let key = Array(data.keys)[indexPath.section]
                 data[key]?.remove(at: indexPath.row)
             }
-            
               tableView.reloadData()
-//            tableView.beginUpdates()
-//            tableView.deleteRows(at: selectedRows, with: .automatic)
-//            tableView.endUpdates()
         }
+        
     }
     
     @objc func addTodo() {
@@ -80,9 +139,10 @@ class TodoTableViewController: UITableViewController {
         let addTodoVC = AddTodoViewController()
         addTodoVC.delegate = self
         navigationController?.pushViewController(addTodoVC, animated: true)
+        
     }
     
-    
+
     
     // MARK: - tableview data source
     
@@ -99,7 +159,7 @@ class TodoTableViewController: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as! TodoTableViewCell
         
         let sectionString = Array(data.keys)[indexPath.section]
-        cell.todoItem.text = data[sectionString]![indexPath.row].activity
+        cell.todoItem.text = data[sectionString]![indexPath.row].title
         cell.accessoryType = .detailDisclosureButton
         
         return cell
@@ -141,7 +201,7 @@ extension TodoTableViewController {
         
         data[keyOfDestinationItemMoved]?.insert(valueOfItemMoved!, at: destinationIndexPath.row)
         
-        data[keyOfDestinationItemMoved]?[destinationIndexPath.row].priority = keyOfDestinationItemMoved
+        data[keyOfDestinationItemMoved]?[destinationIndexPath.row].priorityNumber = keyOfDestinationItemMoved
     }
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
@@ -174,7 +234,7 @@ extension TodoTableViewController {
             cell.todoItem.attributedText = attribute
             
             let key = Array(self.data.keys)[indexPath.section]
-            self.data[key]?[indexPath.row].stripped = true
+            self.data[key]?[indexPath.row].isCompleted = true
             success(true)
         })
         return UISwipeActionsConfiguration(actions: [completeAction])
@@ -188,10 +248,10 @@ extension TodoTableViewController: AddTodoViewControllerDelegate {
         
     }
     
-    func addTodoDidFinish(itemTitle: String, deadline: String, priority: String) {
+    func editTodoDidFinish(todoItem: TodoItem) {
         
         var keyPriority: String = String()
-        switch priority {
+        switch todoItem.priorityNumber! {
         case "1":
             keyPriority = "High Priority"
         case "2":
@@ -202,8 +262,45 @@ extension TodoTableViewController: AddTodoViewControllerDelegate {
             keyPriority = ""
         }
         
+        let row = data[keyPriority]?.firstIndex(of: todoItem)!
         
-        data[keyPriority]?.append(OldTodoItem(activity: itemTitle, deadline: deadline, priority: priority))
+        let section = getKeyPos(keyToFind: keyPriority)
+        
+        
+        let myIndexPath = IndexPath(row: row!, section: section)
+        tableView.reloadRows(at: [myIndexPath], with: .middle)
+    }
+    
+    
+    func getKeyPos(keyToFind: String) -> Int{
+        var pos = 0
+        for (key, value) in data {
+            if key == keyToFind {
+                return pos
+            }
+            pos += 1
+        }
+        
+        return -1
+    }
+    
+    func addTodoDidFinish(todoItem: TodoItem) {
+        
+        var keyPriority: String = String()
+        switch todoItem.priorityNumber! {
+        case "1":
+            keyPriority = "High Priority"
+        case "2":
+            keyPriority = "Medium Priority"
+        case "3":
+            keyPriority = "Low Priority"
+        default:
+            keyPriority = ""
+        }
+        
+        data[keyPriority]?.append(todoItem)
         tableView.reloadData() // refresh!
+        
     } 
 }
+

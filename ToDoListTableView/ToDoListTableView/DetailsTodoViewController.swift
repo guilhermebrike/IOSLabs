@@ -10,7 +10,7 @@ import UIKit
 
 class DetailsTodoViewController: UIViewController {
 
-    var todoItem: OldTodoItem!
+    var todoItem: TodoItem!
     
     
     lazy var labelsStackView: UIStackView = {
@@ -29,15 +29,15 @@ class DetailsTodoViewController: UIViewController {
         view.backgroundColor = .white
         view.addSubview(labelsStackView)
         
-        if todoItem.stripped == true {
-            labelsStackView.addArrangedSubview(DetailsTodoViewController.createUILabel(fontSize: 25,value: "(DONE) "+todoItem.activity))
+        if todoItem.isCompleted == true {
+            labelsStackView.addArrangedSubview(DetailsTodoViewController.createUILabel(fontSize: 25,value: "(DONE) "+todoItem.title!))
             
         } else {
-            labelsStackView.addArrangedSubview(DetailsTodoViewController.createUILabel(fontSize: 25,value: todoItem.activity))
+            labelsStackView.addArrangedSubview(DetailsTodoViewController.createUILabel(fontSize: 25,value: todoItem.title!))
         }
         //ask question as I had a lot of problems on acessing the city, also open the code for Assignment 1 Started to ask
-        labelsStackView.addArrangedSubview(DetailsTodoViewController.createUILabel(fontSize: 25,value: todoItem.deadline))
-        labelsStackView.addArrangedSubview(DetailsTodoViewController.createUILabel(fontSize: 25,value: todoItem.priority))
+        labelsStackView.addArrangedSubview(DetailsTodoViewController.createUILabel(fontSize: 25,value: todoItem.deadline!))
+        labelsStackView.addArrangedSubview(DetailsTodoViewController.createUILabel(fontSize: 25,value: todoItem.priorityNumber!))
         
         NSLayoutConstraint.activate([
             labelsStackView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
