@@ -18,6 +18,10 @@
 		792D789922BAED7F008FA09A /* GameCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 792D789822BAED7F008FA09A /* GameCollectionViewCell.swift */; };
 		792D789B22BAF800008FA09A /* UIView+ConstraintLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 792D789A22BAF800008FA09A /* UIView+ConstraintLayout.swift */; };
 		792D789D22BAFA26008FA09A /* EventsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 792D789C22BAFA26008FA09A /* EventsTableViewController.swift */; };
+		792D789F22BC2EAC008FA09A /* EventsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 792D789E22BC2EAC008FA09A /* EventsTableViewCell.swift */; };
+		792D78A122BC3291008FA09A /* AddEventViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 792D78A022BC3291008FA09A /* AddEventViewController.swift */; };
+		792D78A422C16B2D008FA09A /* DatabaseModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 792D78A222C16B2D008FA09A /* DatabaseModel.xcdatamodeld */; };
+		792D78A622C16B7F008FA09A /* CoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 792D78A522C16B7F008FA09A /* CoreDataManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -34,6 +38,10 @@
 		792D789822BAED7F008FA09A /* GameCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameCollectionViewCell.swift; sourceTree = "<group>"; };
 		792D789A22BAF800008FA09A /* UIView+ConstraintLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+ConstraintLayout.swift"; sourceTree = "<group>"; };
 		792D789C22BAFA26008FA09A /* EventsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventsTableViewController.swift; sourceTree = "<group>"; };
+		792D789E22BC2EAC008FA09A /* EventsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventsTableViewCell.swift; sourceTree = "<group>"; };
+		792D78A022BC3291008FA09A /* AddEventViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddEventViewController.swift; sourceTree = "<group>"; };
+		792D78A322C16B2D008FA09A /* DatabaseModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DatabaseModel.xcdatamodel; sourceTree = "<group>"; };
+		792D78A522C16B7F008FA09A /* CoreDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -78,6 +86,10 @@
 				792D789622BAE67B008FA09A /* GamesCollectionViewController.swift */,
 				792D789822BAED7F008FA09A /* GameCollectionViewCell.swift */,
 				792D789C22BAFA26008FA09A /* EventsTableViewController.swift */,
+				792D789E22BC2EAC008FA09A /* EventsTableViewCell.swift */,
+				792D78A022BC3291008FA09A /* AddEventViewController.swift */,
+				792D78A222C16B2D008FA09A /* DatabaseModel.xcdatamodeld */,
+				792D78A522C16B7F008FA09A /* CoreDataManager.swift */,
 			);
 			path = UIDemo;
 			sourceTree = "<group>";
@@ -153,13 +165,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				792D78A422C16B2D008FA09A /* DatabaseModel.xcdatamodeld in Sources */,
 				792D789122BAE18B008FA09A /* TabBarController.swift in Sources */,
+				792D78A122BC3291008FA09A /* AddEventViewController.swift in Sources */,
 				792D789722BAE67B008FA09A /* GamesCollectionViewController.swift in Sources */,
 				792D789922BAED7F008FA09A /* GameCollectionViewCell.swift in Sources */,
 				792D788122BADF1C008FA09A /* ViewController.swift in Sources */,
+				792D78A622C16B7F008FA09A /* CoreDataManager.swift in Sources */,
 				792D787F22BADF1C008FA09A /* AppDelegate.swift in Sources */,
 				792D789322BAE1CF008FA09A /* MainViewController.swift in Sources */,
 				792D789D22BAFA26008FA09A /* EventsTableViewController.swift in Sources */,
+				792D789F22BC2EAC008FA09A /* EventsTableViewCell.swift in Sources */,
 				792D789B22BAF800008FA09A /* UIView+ConstraintLayout.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -358,6 +374,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		792D78A222C16B2D008FA09A /* DatabaseModel.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				792D78A322C16B2D008FA09A /* DatabaseModel.xcdatamodel */,
+			);
+			currentVersion = 792D78A322C16B2D008FA09A /* DatabaseModel.xcdatamodel */;
+			path = DatabaseModel.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 792D787322BADF1B008FA09A /* Project object */;
 }
