@@ -1,0 +1,4 @@
+target 'UIDemo' do
+ pod 'Charts' 
+
+end
